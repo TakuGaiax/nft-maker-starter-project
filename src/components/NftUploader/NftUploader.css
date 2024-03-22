@@ -1,37 +1,33 @@
-.outerBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: none;
-    padding: 36px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 8px gray;
-    color: gray;
-  }
-  
-  .outerBox h2 {
-    font-weight: 600;
-    margin-top: 5px;
-  }
-  
-  .nftUplodeBox {
-    border: 2px dashed #2d6395;
-    padding: 35px 60px;
-    position: relative;
-  }
-  
-  .imageLogoAndText p {
-    margin-bottom: 0px;
-  }
-  
-  .nftUploadInput {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
+*{
+  flex-direction: column;
+  /* width: 80%;
+  height: 80%;  */
+  /* background: linear-gradient(
+    45deg,
+    #3498db,
+    #2ecc71
+  );  */
+  background: #ece7e750;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+  border-radius: 10px;  */
+  /* position: relative;
+  overflow: hidden;  */
+}
+
+/* Box {
+  width: 500px;
+  height: 500px;
+  background: white;
+  border-radius: 10px;
+  transition: border-radius 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+} */
+
+.nftUploaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+

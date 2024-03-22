@@ -2,12 +2,11 @@
 
 // NftUploader.jsx
 import { ethers } from "ethers";
-import EmployeeId from "../../utils/EmployeeId.json";
+import BusinessCard from "../../utils/BusinessCard.json";
 import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./NftUploader.css";
-import { Web3Storage } from 'web3.storage';
+import "./BusinessCard.css";
 
 import Box from '@mui/material/Box'; 
 import TextField from '@mui/material/TextField';
@@ -58,7 +57,7 @@ const NftMaker = () => {
     }
   };
 
-  const CONTRACT_ADDRESS ="0x784e8C4702B58608c5832054bE2c324Ab1668D82";
+  const CONTRACT_ADDRESS ="0xA6d8eD54a6A2A42068b59b788Ff39D75E629a276";
 
   //コントラクトからNFTミントの認証
   const askContractToMintNft = async () => {
@@ -78,7 +77,7 @@ const NftMaker = () => {
         // }
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          EmployeeId.abi,
+          BusinessCard.abi,
           signer
         );
 
@@ -90,7 +89,8 @@ const NftMaker = () => {
         // }
 
         console.log("Going to pop wallet now to pay gas...");
-        let nftTxn = await connectedContract.mintEmployeeIdNFT(address, name, department, message);//ミント処理
+        let addresses = address.split(',').map(addr=>addr.trim());
+        let nftTxn = await connectedContract.mintBusinessCardNFT(addresses, name, department, message);//ミント処理
         console.log("Mining...please wait.");
         await nftTxn.wait();
         console.log(
@@ -187,7 +187,7 @@ const NftMaker = () => {
   return (
   <div className="nftUploaderContainer">
     <h1>
-      社員証NFTミント
+      名刺NFTミント
     </h1>
     <Box  sx={{ 
       width: 350,
@@ -201,6 +201,7 @@ const NftMaker = () => {
         fullWidth
         id="walletAddress"
         label="ウォレットアドレス"
+        helperText="複数のアドレスを入力する場合は、カンマで区切ってください。"
         value={address}
         onChange={(e) => setAddress(e.target.value)} 
         autoFocus
@@ -245,12 +246,12 @@ const NftMaker = () => {
         variant="contained"
         onClick={askContractToMintNft}
         sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
-          Get your employeeID
+          Get your Business Card
       </Button>
-      <Link href="#" variant="body2"
+      {/* <Link href="#" variant="body2"
         sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '20px', background: '#ffffff' }}>
         Already Got your ID?
-      </Link>
+      </Link> */}
     </Box>
   </div>   
     

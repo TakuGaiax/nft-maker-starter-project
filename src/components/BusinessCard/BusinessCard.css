@@ -1,0 +1,34 @@
+*{
+    flex-direction: column;
+    /* width: 80%;
+    height: 80%;  */
+    /* background: linear-gradient(
+      45deg,
+      #3498db,
+      #2ecc71
+    );  */
+    background: #ece7e750;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+    border-radius: 10px;  */
+    /* position: relative;
+    overflow: hidden;  */
+  }
+  
+  /* Box {
+    width: 500px;
+    height: 500px;
+    background: white;
+    border-radius: 10px;
+    transition: border-radius 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  } */
+  
+  .nftUploaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  
+  
+  
