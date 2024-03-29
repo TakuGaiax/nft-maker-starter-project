@@ -58,7 +58,7 @@ const NftMaker = () => {
     }
   };
 
-  const CONTRACT_ADDRESS ="0x784e8C4702B58608c5832054bE2c324Ab1668D82";
+  const CONTRACT_ADDRESS ="0x1215b8eB3b90EcD2a23dD5eC6Fe2bbDe2897aCF4";
 
   //コントラクトからNFTミントの認証
   const askContractToMintNft = async () => {
@@ -96,9 +96,7 @@ const NftMaker = () => {
         console.log(
           `Mined, see transaction: https://sepolia.etherscan.io/tx/${nftTxn.hash}`
         );
-        function navigateHome() {
-          navigate('/homescreen');
-        }
+        navigate('/businesscard');
 
       } else {
         console.log("Ethereum object doesn't exist!");

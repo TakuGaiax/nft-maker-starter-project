@@ -1,6 +1,8 @@
 import React from "react";
 import CustomToolbar from '../basic/Toolbar.jsx';
+import SendCard from '../ExchangeCard/SendCard.jsx';
 import DrawItem from '../basic/DrawItem.jsx';
+
 
 
 import Box from '@mui/material/Box';
@@ -13,18 +15,23 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
 
-const HomeScreen = () => {
+const ExchangeCard = () => {
 
     const drawerWidth = 240;
 
     return (
         <>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
                 <CustomToolbar />
-                <DrawItem />
+                <Box sx={{display: 'flex', flexGrow: 1}}>
+                    <DrawItem />
+                    <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
+                        <SendCard />
+                    </Box>
+                </Box>
             </Box>
         </>
     )
 }
 
-export default HomeScreen;
+export default ExchangeCard;
