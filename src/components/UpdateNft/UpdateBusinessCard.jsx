@@ -20,7 +20,7 @@ const UpdateBusinessCard = () => {
 
     const drawerWidth = 240;
     const { ethereum } = window;
-    const CONTRACT_ADDRESS = "0x0961e83A96DC9bAB3FC56b1c5d1dbD7F17e68520";
+    const CONTRACT_ADDRESS = "0x440f413941fb5069787c3C589177f4e65DEac1e6";
 
     useEffect(() => {
         if(setCurrentAccount) {

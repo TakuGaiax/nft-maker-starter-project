@@ -16,7 +16,7 @@ const UpdateEmployeeId = ()  => {
     const [ownedTokenIds, setOwnedTokenIds] = useState([]); 
     const [currentAccount, setCurrentAccount] = useState("");
     const drawerWidth = 240;
-    const CONTRACT_ADDRESS = "0x1215b8eB3b90EcD2a23dD5eC6Fe2bbDe2897aCF4";
+    const CONTRACT_ADDRESS = "0x3043D724C418Fcf60A3E552B606c66F3562311c2";
 
     const { ethereum } = window;
 

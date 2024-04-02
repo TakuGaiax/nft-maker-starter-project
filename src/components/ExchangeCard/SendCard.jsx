@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from 'ethers';
 import BusinessCard from "../../utils/BusinessCard.json";
+import {QrReader} from 'react-qr-reader';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -24,9 +25,10 @@ const SendCard = () => {
     const [selectedNftInfo, setSelectedNftInfo] = useState({employeeName: '', department: '', message: '' });
     const [recipientAddress, setRecipientAddress] = useState('');
     const [currentAccount, setCurrentAccount] = useState("");
+    const [showQrReader, setShowQrReader] = useState(false);
 
     const { ethereum } = window;
-    const CONTRACT_ADDRESS ="0x0961e83A96DC9bAB3FC56b1c5d1dbD7F17e68520";
+    const CONTRACT_ADDRESS ="0x440f413941fb5069787c3C589177f4e65DEac1e6";
 
     //ウォレット認証
     const checkIfWalletIsConnected = async () => {
@@ -46,9 +48,20 @@ const SendCard = () => {
         } else {
           console.log("No authorized account found");
         }
-      };
+    };
     
-    //名刺NFTのtokenIdを取得する
+    //QRコードスキャンの処理
+    const handleScan = data => {
+        if (data) {
+            setRecipientAddress(data);//データからアドレスを受け取り更新
+            setShowQrReader(false);//スキャン成功後にリーダーを非表示
+        }
+    }
+    const handleScanError = (err) => {
+        console.error(err);
+    }
+    
+      //名刺NFTのtokenIdを取得する
     const fetchTokenIds = async () => {
         try {
             if (ethereum) {
@@ -202,6 +215,18 @@ const SendCard = () => {
                         },
                     }}
                 />
+                {/* QRコードでアドレス読み取り */}
+                {showQrReader && (
+                    <QrReader
+                    delay={300}
+                    onError={handleScanError}
+                    onScan={handleScan}
+                    style={{ width: '100%'}}
+                    />
+                )}
+                <Button onClick={() => setShowQrReader(!showQrReader)}>
+                    {showQrReader ? 'QRリーダーを隠す':'QRコードでアドレスをスキャン'}
+                </Button>
                 {/* 送信ボタン */}
                 <Button variant="contained" sx={{ mt: 2 }} onClick={sendNft}>
                     送信

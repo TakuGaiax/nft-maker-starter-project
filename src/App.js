@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<NftUploader />}/>
         <Route path="/home" element={<HomePage/>}/>
-        <Route path="/businesscard" element={<BusinessCard/>}/>
+        {/* <Route path="/businesscard" element={<BusinessCard/>}/> */}
         <Route path="/send" element={<ExchangeCard/>}></Route>
         <Route path="/update" element={<UpdateHome/>}></Route>
         <Route path="/update/employeeid" element={<UpdateEmployeeId/>}></Route>

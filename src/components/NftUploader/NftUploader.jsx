@@ -3,11 +3,15 @@
 // NftUploader.jsx
 import { ethers } from "ethers";
 import EmployeeId from "../../utils/EmployeeId.json";
+import BusinessCard from "../../utils/BusinessCard.json";
 import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./NftUploader.css";
 import { Web3Storage } from 'web3.storage';
+import MintComplete from './Complete.jsx';
+import MintEmployeeIdComplete from './CompleteEmployeeId.jsx';
+import MintLoading from './MintLoading.jsx';
 
 import Box from '@mui/material/Box'; 
 import TextField from '@mui/material/TextField';
@@ -22,12 +26,12 @@ const NftMaker = () => {
   const [name, setName] = useState("");
   const [department, setDepartment] = useState("");
   const [message, setMessage] = useState("");
+  const [tokenId, setTokenId] = useState("");
+  const [ownedTokenIds, setOwnedTokenIds] = useState([]); 
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintComplete, setMintComplete] = useState(false);
+  const [mintCompleteId, setMintCompleteId] = useState(false);
 
-  const [tokenId, setTokenId] = useState([]);//所有するtokenId
-  const [selectedTokenId, setSelectedTokenId] = useState("");//選択されたtokenId
-  const [newEmployeeName, setNewEmployeeName] = useState("");
-  const [newDepartmentName, setNewDepartmentName] = useState("");
-  const [newMessage, setNewMessage] = useState(""); 
 
   const ownerAddress = "0x7829e36dd157a6a501f8ea5ebc242a12f6cdbfa7";
   /*
@@ -58,12 +62,27 @@ const NftMaker = () => {
     }
   };
 
-  const CONTRACT_ADDRESS ="0x1215b8eB3b90EcD2a23dD5eC6Fe2bbDe2897aCF4";
+  const businessCardContractAddress ="0x440f413941fb5069787c3C589177f4e65DEac1e6";
+  const employeeIdContractAddress ="0x3043D724C418Fcf60A3E552B606c66F3562311c2";
 
   //コントラクトからNFTミントの認証
-  const askContractToMintNft = async () => {
+  const MintEmployeeIdNft = async () => {
+    //記入漏れがあった場合エラー
+    if(!address || !name || !department || !message) {
+      console.log("All fields are required");
+      window.alert("すべての項目を記入してください。");
+      return;
+    }
+
+    //ウォレットアドレスのフォーマット検証
+    if(!ethers.utils.isAddress(address)){
+      console.error("Invalid wallet address");
+      window.alert("無効なウォレットアドレスです。");
+      return;
+    }
+    
     console.log("Owner address: ", ownerAddress);
-      console.log(CONTRACT_ADDRESS);
+      console.log(employeeIdContractAddress);
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -72,120 +91,127 @@ const NftMaker = () => {
         const accounts = await ethereum.request({ method: "eth_requestAccounts" });
         const currentAddress = accounts[0];
         console.log("Current address: ", currentAddress);
-        // if (currentAddress !== ownerAddress) {//管理者アドレスのチェック
-        //   alert("Only the owner can mint NFTs");
-        //   return;
-        // }
-        const connectedContract = new ethers.Contract(
-          CONTRACT_ADDRESS,
+       
+        //EmployeeIdコントラクト
+        const employeeIdContract = new ethers.Contract(
+          employeeIdContractAddress,
           EmployeeId.abi,
           signer
         );
+        
+        setIsMinting(true); //社員証NFTミント中
+        try {
+          //社員証NFT
+          let nftTxn = await employeeIdContract.mintEmployeeIdNFT(address, name, department, message);
+          console.log("社員証NFTをミント中");
+          await nftTxn.wait();
+          console.log(
+            `Mined, see transaction: https://sepolia.etherscan.io/tx/${nftTxn.hash}`
+          );
+          setIsMinting(false);
+          setMintCompleteId(true);
+        } catch (error) {
+          console.error(error);
+          if (error.code === 4001) {
+            window.alert("トランザクションが拒否されました。");
+          } else {
+            window.alert("トランザクション中にエラーが発生しました。");
+          }
+          setIsMinting(false);
+          setMintCompleteId(false);
+          return;
+        } 
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+      window.alert("認証されてウォレットが見つかりません");
+    }
+  };
 
-        //既にミントされているあアカウントか確認する
-        // const tokenCount = await connectedContract.getTokenCountByOwner(currentAddress);
-        // if (tokenCount.toString() >= 1) {
-        //   alert("You have already minted an NFT");
-        //   return;
-        // }
-
-        console.log("Going to pop wallet now to pay gas...");
-        let nftTxn = await connectedContract.mintEmployeeIdNFT(address, name, department, message);//ミント処理
-        console.log("Mining...please wait.");
-        await nftTxn.wait();
-        console.log(
-          `Mined, see transaction: https://sepolia.etherscan.io/tx/${nftTxn.hash}`
+  const MintBusinessCardNft = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+        const currentAddress = accounts[0];
+        console.log("Current address: ", currentAddress);
+       
+        //EmployeeIdコントラクト
+        const employeeIdContract = new ethers.Contract(
+          employeeIdContractAddress,
+          EmployeeId.abi,
+          signer
         );
-        navigate('/businesscard');
+        //BusinessCardコントラクト
+        const businessCardContract = new ethers.Contract(
+          businessCardContractAddress,
+          BusinessCard.abi,
+          signer
+        );
+        setMintCompleteId(false);
+        setIsMinting(true); //名刺NFTミント中
+        try {
+
+          //名刺NFT
+          //社員証NFTのtokenIdを取得
+          setIsMinting(true);
+          const balance = await employeeIdContract.balanceOf(currentAddress);
+          console.log(`Total NFTs owned: ${balance.toNumber()}`);//NFT総数は読み取れている
+
+          const tokenIds = [];//この配列にtokenIdが入る
+          console.log("tokenIds:", tokenIds);
+
+          for (let i = 0; i < balance.toNumber(); i++) {
+            try{
+              const tokenId = await employeeIdContract.tokenOfOwnerByIndex(currentAddress, i);
+              console.log(`Token ID at index ${i}: ${tokenId}`);
+              tokenIds.push(tokenId.toString());
+            } catch (error) {
+              console.error(`Error fetching token at index ${i}:`, error);
+            }
+          }
+
+          //最新のtokenIdを取得
+          const latestTokenId = tokenIds[tokenIds.length - 1];
+          console.log("Going to pop wallet now to pay gas...");
+
+          let nftTxn2 = await businessCardContract.mintNewBusinessCardNFT(latestTokenId, name, department, message);
+          console.log("名刺NFTをミント中");
+          await nftTxn2.wait();
+          console.log(
+            `Mined, see transaction: https://sepolia.etherscan.io/tx/${nftTxn2.hash}`
+          );
+          setIsMinting(false);
+          setMintComplete(true);
+        } catch (error) {
+          console.error(error);
+          if (error.code === 4001) {
+            window.alert("トランザクションが拒否されました。");
+          } else {
+            window.alert("トランザクション中にエラーが発生しました。");
+          }
+          setIsMinting(false);
+          setMintComplete(false);
+          return;
+        } 
 
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
       console.log(error);
+      window.alert("認証されてウォレットが見つかりません");
     }
   };
-
-  //ユーザーの持っているtokenIdをリスト化
-  // const fetchTokenIds = async () => {
-  //   try{
-  //     const { ethereum } = window;
-  //     if (ethereum) {
-  //       const provider = new ethers.providers.Web3Provider(ethereum);
-  //       const signer = provider.getSigner();
-  //       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-  //       const currentAddress = accounts[0];
-  //       console.log("Current address: ", currentAddress);
-  //       if (currentAddress !== ownerAddress) {//管理者アドレスのチェック
-  //         alert("Only the owner can update NFTs");
-  //         return;
-  //       }
-  //       const connectedContract = new ethers.Contract(
-  //         CONTRACT_ADDRESS,
-  //         Web3Mint.abi,
-  //         signer
-  //       );
-  //       const tokenIds = await connectedContract.getTokenIdsByOwner(address);
-  //       setTokenId(tokenIds);
-  //       console.log("Listing user's tokenIds:", tokenIds);
-
-  //       //Bignumberと表示されるので文字列に変換する
-  //       tokenIds.forEach(tokenIds => {
-  //         console.log(tokenIds.toString());
-  //       });
-
-  //     } else {
-  //       console.log("Ethereum object doesn't exist!");
-  //     }
-  //   }catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-  
-  // //NFTの更新
-  // const UpdateEmployeeInfo = async () => {
-  //   if(!selectedTokenId){
-  //     alert("Please select a tokenId");
-  //     return;
-  //   }
-  //   try{
-  //     const { ethereum } = window;
-  //     if (ethereum) {
-  //       const provider = new ethers.providers.Web3Provider(ethereum);
-  //       const signer = provider.getSigner();
-  //       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-  //       const currentAddress = accounts[0];
-  //       console.log("Current address: ", currentAddress);
-  //       if (currentAddress !== ownerAddress) {//管理者アドレスのチェック
-  //         alert("Only the owner can update NFTs");
-  //         return;
-  //       }
-  //       const connectedContract = new ethers.Contract(
-  //         CONTRACT_ADDRESS,
-  //         Web3Mint.abi,
-  //         signer
-  //       );
-  //       let txn = await connectedContract.updateEmployeeInfo(
-  //         selectedTokenId,
-  //         newEmployeeName,
-  //         newDepartmentName,
-  //         newMessage
-  //       );
-  //       console.log("Updateing employee info...");
-  //       await txn.wait();
-  //       console.log(`Updated, see transaction: https://sepolia.etherscan.io/tx/${txn.hash}`);
-  //     } else {
-  //       console.log("Ethereum object doesn't exist!");
-  //     }
-  //   }catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   return (
   <div className="nftUploaderContainer">
     <h1>
-      社員証NFTミント
+      社員証&名刺NFTミント
     </h1>
     <Box  sx={{ 
       width: 350,
@@ -241,7 +267,7 @@ const NftMaker = () => {
         type="submit"
         fullWidth
         variant="contained"
-        onClick={askContractToMintNft}
+        onClick={MintEmployeeIdNft}
         sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
           Get your employeeID
       </Button>
@@ -250,6 +276,9 @@ const NftMaker = () => {
         Already Got your ID?
       </Link>
     </Box>
+    <MintLoading isMinting={isMinting}/>
+    <MintComplete mintComplete={mintComplete}/>
+    <MintEmployeeIdComplete mintEmployeeIdComplete={mintCompleteId} MintBusinessCardNft={MintBusinessCardNft}/>
   </div>   
     
   );
