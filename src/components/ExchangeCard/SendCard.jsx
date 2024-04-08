@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ethers } from 'ethers';
 import BusinessCard from "../../utils/BusinessCard.json";
-import {QrReader} from 'react-qr-reader';
+import jsQR from 'jsqr';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -27,6 +27,10 @@ const SendCard = () => {
     const [currentAccount, setCurrentAccount] = useState("");
     const [showQrReader, setShowQrReader] = useState(false);
 
+    const videoRef= useRef(null); 
+    const canvasRef = useRef(null);
+    const [error, setError] = useState('');
+
     const { ethereum } = window;
     const CONTRACT_ADDRESS ="0x440f413941fb5069787c3C589177f4e65DEac1e6";
 
@@ -50,18 +54,89 @@ const SendCard = () => {
         }
     };
     
-    //QRコードスキャンの処理
-    const handleScan = data => {
-        if (data) {
-            setRecipientAddress(data);//データからアドレスを受け取り更新
-            setShowQrReader(false);//スキャン成功後にリーダーを非表示
+    
+
+
+    useEffect(() => {
+        if (!showQrReader) {
+            return;
+        }
+
+        const constraints = {
+            video: {
+                facingMode: 'environment',
+                width: {ideal: 300},
+                height: {ideal: 300},
+            },
+        }
+
+        //デバイスのカメラにアクセス
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream)=> {
+                //カメラにアクセスできたらvideo要素にストリームをセット
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                    videoRef.current.play();
+                    scanQrCode();
+                } else {
+                    console.log("video object does not exist");
+                }
+            })
+            .catch((error) => {
+                console.log('Error accessing media devices:', error);
+                setError('カメラへのアクセスに失敗しました。');
+            });
+                
+             
+
+        
+        //コンポーネントがアンマウントされたらカメラのストリームを停止する
+        const currentVideoRef = videoRef.current;
+        return () => {
+            if (currentVideoRef && currentVideoRef.srcObject) {
+                const stream = currentVideoRef.srcObject;
+                const tracks = stream.getTracks();//ビデオトラックを取得
+                tracks.forEach((track) => track.stop());
+            }
+        }
+
+    }, [showQrReader]);
+
+    //QRコードを読み取る
+    const scanQrCode = () => {
+        const canvas = canvasRef.current;
+        const video = videoRef.current;
+        if (canvas && video) {
+            const ctx = canvas.getContext("2d");//2D描画コンテキスト取得
+            if (ctx) {
+                //カメラの映像をcanvasに描画する
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                //QRコードをスキャン
+                const qrCodeData = jsQR(imageData.data, imageData.width, imageData.height);
+                if (qrCodeData) {
+                    //スキャンされた内容を確認する
+                    const walletAddress = qrCodeData.data;
+                    const isValidEthereumAddress = walletAddress.startsWith('0x') && walletAddress.length === 42;
+
+                    if(!isValidEthereumAddress){
+                        setError('対応していないQRコードです');
+                        setTimeout(scanQrCode, 100);
+                        return;
+                    }
+
+                    setRecipientAddress(walletAddress);
+                    return;
+                }
+
+            }
+        } else {
+            console.log("canvas object does not exist");
         }
     }
-    const handleScanError = (err) => {
-        console.error(err);
-    }
+     
     
-      //名刺NFTのtokenIdを取得する
+    //名刺NFTのtokenIdを取得する
     const fetchTokenIds = async () => {
         try {
             if (ethereum) {
@@ -216,17 +291,13 @@ const SendCard = () => {
                     }}
                 />
                 {/* QRコードでアドレス読み取り */}
-                {showQrReader && (
-                    <QrReader
-                    delay={300}
-                    onError={handleScanError}
-                    onScan={handleScan}
-                    style={{ width: '100%'}}
-                    />
-                )}
                 <Button onClick={() => setShowQrReader(!showQrReader)}>
                     {showQrReader ? 'QRリーダーを隠す':'QRコードでアドレスをスキャン'}
                 </Button>
+                {showQrReader && (
+                    <video ref={videoRef} style={{width: '100%'}} autoPlay playsInline></video>
+                )}
+                <canvas ref={canvasRef} style={{display: 'none'}}></canvas>
                 {/* 送信ボタン */}
                 <Button variant="contained" sx={{ mt: 2 }} onClick={sendNft}>
                     送信

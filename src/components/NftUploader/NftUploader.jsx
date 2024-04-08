@@ -219,6 +219,7 @@ const NftMaker = () => {
       padding: '20px',
       background: '#ffffff', 
       borderRadius: '10px' }}>
+      {/* <button onClick={checkIfWalletIsConnected}> Connect Wallet</button> */}
       <TextField
         margin="normal"
         required
