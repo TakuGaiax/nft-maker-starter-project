@@ -30,9 +30,9 @@ const DrawItem = () => {
                 <ListItem button component={Link} to="/send">
                     <ListItemText primary="名刺交換" sx={{backgroundColor: 'transparent'}}/>
                 </ListItem>
-                <ListItem button component={Link} to="/update">
+                {/* <ListItem button component={Link} to="/update">
                     <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
-                </ListItem>
+                </ListItem> */}
             </List>
         </Drawer>
         </>

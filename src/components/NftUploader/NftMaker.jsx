@@ -8,7 +8,6 @@ import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./NftUploader.css";
-import { Web3Storage } from 'web3.storage';
 import MintComplete from './Complete.jsx';
 import MintEmployeeIdComplete from './CompleteEmployeeId.jsx';
 import MintLoading from './MintLoading.jsx';
@@ -41,6 +40,26 @@ const NftMaker = () => {
   /*この段階でcurrentAccountの中身は空*/
   console.log("currentAccount: ", currentAccount);
 
+  //NFTの保有状況を確認する
+  const checkIfUserHasNft = async () => {
+    const { ethereum } = window;
+    if (ethereum) {
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = provider.getSigner();
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+      const Address = accounts[0];
+      const employeeIdContract = new ethers.Contract(
+        employeeIdContractAddress,
+        EmployeeId.abi,
+        signer
+      );
+      const balance = await employeeIdContract.balanceOf(Address);
+      console.log(balance.toNumber());
+      return balance.toNumber() > 0;
+    }
+    return false;
+  }
+  
   //ウォレット認証
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
@@ -62,8 +81,8 @@ const NftMaker = () => {
     }
   };
 
-  const businessCardContractAddress ="0x440f413941fb5069787c3C589177f4e65DEac1e6";
-  const employeeIdContractAddress ="0x3043D724C418Fcf60A3E552B606c66F3562311c2";
+  const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
+  const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
 
   //コントラクトからNFTミントの認証
   const MintEmployeeIdNft = async () => {
@@ -82,7 +101,7 @@ const NftMaker = () => {
     }
     
     console.log("Owner address: ", ownerAddress);
-      console.log(employeeIdContractAddress);
+    console.log(employeeIdContractAddress);
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -98,6 +117,12 @@ const NftMaker = () => {
           EmployeeId.abi,
           signer
         );
+
+        const isAdmin = await employeeIdContract.isAdmin(currentAddress);
+        if(!isAdmin) {
+          window.alert("管理者権限が必要です")
+          return;
+        }
         
         setIsMinting(true); //社員証NFTミント中
         try {
@@ -152,6 +177,11 @@ const NftMaker = () => {
           BusinessCard.abi,
           signer
         );
+        const isAdmin = await businessCardContract.isAdmin(currentAddress);
+        if(!isAdmin) {
+          window.alert("管理者権限が必要です")
+          return;
+        }
         setMintCompleteId(false);
         setIsMinting(true); //名刺NFTミント中
         try {
@@ -179,7 +209,7 @@ const NftMaker = () => {
           const latestTokenId = tokenIds[tokenIds.length - 1];
           console.log("Going to pop wallet now to pay gas...");
 
-          let nftTxn2 = await businessCardContract.mintNewBusinessCardNFT(latestTokenId, name, department, message);
+          let nftTxn2 = await businessCardContract.mintNewBusinessCardNFT(address, latestTokenId, name, department, message);
           console.log("名刺NFTをミント中");
           await nftTxn2.wait();
           console.log(
@@ -208,10 +238,42 @@ const NftMaker = () => {
     }
   };
 
+  const checkAdmin = async () => {
+    const { ethereum } = window;
+        try {
+            const provider = new ethers.providers.Web3Provider(ethereum);
+            const signer = provider.getSigner();
+            const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+            const currentAddress = accounts[0];
+            const employeeIdContract = new ethers.Contract(
+                employeeIdContractAddress,
+                EmployeeId.abi,
+                signer
+              );
+            const businessCardContract = new ethers.Contract(
+                businessCardContractAddress,
+                BusinessCard.abi,
+                signer
+            );
+            const isAdminEmployeeId = await employeeIdContract.isAdmin(currentAddress);
+            console.log(isAdminEmployeeId)
+            const isAdminBusinessCard = await businessCardContract.isAdmin(currentAddress);
+            console.log(isAdminBusinessCard)
+            if(isAdminEmployeeId && isAdminBusinessCard) {
+                navigate('/home/company')
+            } else {
+                window.alert('管理者権限が必要です')
+            }
+        } catch (error) {
+            console.log(error);
+            window.alert("エラーが発生しました")
+        }
+  }
+
   return (
   <div className="nftUploaderContainer">
     <h1>
-      社員証&名刺NFTミント
+      社員証&名刺NFT発行
     </h1>
     <Box  sx={{ 
       width: 350,
@@ -270,11 +332,12 @@ const NftMaker = () => {
         variant="contained"
         onClick={MintEmployeeIdNft}
         sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
-          Get your employeeID
+          発行する
       </Button>
       <Link href="#" variant="body2"
+        onClick={checkAdmin}
         sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '20px', background: '#ffffff' }}>
-        Already Got your ID?
+        管理者専用画面へ
       </Link>
     </Box>
     <MintLoading isMinting={isMinting}/>

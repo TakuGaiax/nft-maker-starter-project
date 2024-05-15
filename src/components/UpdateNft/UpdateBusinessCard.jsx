@@ -6,11 +6,13 @@ import ButtonForUpdate from '../basic/ButtonForUpdate.jsx';
 import BusinessCard from "../../utils/BusinessCard.json";
 import { ethers } from 'ethers';
 import Box from '@mui/material/Box';
+import { Button } from "@mui/material";
 
 
 
 const UpdateBusinessCard = () => {
 
+    const [newAddress, setNewAddress] = useState("");
     const [newName, setNewName] = useState('');
     const [newDepartment, setNewDepartment] = useState('');
     const [newMessage, setNewMessage] = useState('');
@@ -20,7 +22,7 @@ const UpdateBusinessCard = () => {
 
     const drawerWidth = 240;
     const { ethereum } = window;
-    const CONTRACT_ADDRESS = "0x440f413941fb5069787c3C589177f4e65DEac1e6";
+    const CONTRACT_ADDRESS = "0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
 
     useEffect(() => {
         if(setCurrentAccount) {
@@ -56,15 +58,21 @@ const UpdateBusinessCard = () => {
                 const signer = provider.getSigner();
                 const accounts = await ethereum.request({ method: "eth_requestAccounts" });
                 const address = accounts[0];
-                const connectedContract = new ethers.Contract(
-                    CONTRACT_ADDRESS,
-                    BusinessCard.abi,
-                    signer
-                );
 
-                const tokenIds = await connectedContract.getTokenIds(address);
-                setOwnedTokenIds(tokenIds.map(tokenId => tokenId.toNumber()));
-                console.log("BusinessCard Nfts:", tokenIds.toString());
+                console.log("Attempting to fetch token IDs for address:", newAddress);
+                if(ethers.utils.isAddress(newAddress)) {
+                    const connectedContract = new ethers.Contract(
+                        CONTRACT_ADDRESS,
+                        BusinessCard.abi,
+                        signer
+                    );
+                    
+                    const tokenIds = await connectedContract.getTokenIds(newAddress);
+                    setOwnedTokenIds(tokenIds.map(tokenId => tokenId.toNumber()));
+                    console.log("BusinessCard Nfts:", tokenIds.toString());
+                } else {
+                    console.error("Invalid address:", newAddress);
+                }
             } else {
                 console.log("Ethereum object doesn't exist!");
             }
@@ -113,7 +121,9 @@ const UpdateBusinessCard = () => {
                 <HomePage />
                 <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
                     <SubTitle title="名刺NFT情報更新ページ"/>
-                    <ContainerForUpdate 
+                    <ContainerForUpdate
+                        newAddress={newAddress}
+                        setNewAddress={setNewAddress} 
                         newName={newName}
                         setNewName={setNewName}
                         newDepartment={newDepartment}
@@ -125,12 +135,19 @@ const UpdateBusinessCard = () => {
                         tokenId={tokenId}
                         setTokenId={setTokenId}
                     />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        onClick={getTokenIds}
+                        sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
+                            NFT情報を取得
+                    </Button>
                     <ButtonForUpdate onUpdate={updateBusinessCardInfo} />
                 </Box>
             </Box>
             
         </div>
-
     )
 }
 

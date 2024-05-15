@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 
 
-const ContainerForUpdate = ({ newName, setNewName, newDepartment, setNewDepartment, newMessage, setNewMessage, ownedTokenIds, tokenId, setTokenId }) => {
+const ContainerForUpdate = ({ newAddress, setNewAddress, newName, setNewName, newDepartment, setNewDepartment, newMessage, setNewMessage, ownedTokenIds, tokenId, setTokenId }) => {
 
     return(
         <>
@@ -22,6 +22,13 @@ const ContainerForUpdate = ({ newName, setNewName, newDepartment, setNewDepartme
                         </option>
                     ))}
                     </select>
+                    <TextField
+                        label="ウォレットアドレス"
+                        value={newAddress}
+                        onChange={(e) => setNewAddress(e.target.value)}
+                        variant="outlined"
+                        fullWidth
+                    />
                     <TextField
                         label="名前"
                         value={newName}

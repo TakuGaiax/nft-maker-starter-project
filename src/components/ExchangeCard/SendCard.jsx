@@ -32,7 +32,7 @@ const SendCard = () => {
     const [error, setError] = useState('');
 
     const { ethereum } = window;
-    const CONTRACT_ADDRESS ="0x440f413941fb5069787c3C589177f4e65DEac1e6";
+    const CONTRACT_ADDRESS ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
 
     //ウォレット認証
     const checkIfWalletIsConnected = async () => {
@@ -65,25 +65,33 @@ const SendCard = () => {
         const constraints = {
             video: {
                 facingMode: 'environment',
-                width: {ideal: 300},
-                height: {ideal: 300},
-            },
+                width: {ideal: 1280},
+                height: {ideal: 720},
+            }
         }
 
         //デバイスのカメラにアクセス
         navigator.mediaDevices.getUserMedia(constraints)
             .then((stream)=> {
+                console.log('Stream:', stream);
                 //カメラにアクセスできたらvideo要素にストリームをセット
                 if (videoRef.current) {
+                    console.log('videoRef.current before setting stream:', videoRef.current);
                     videoRef.current.srcObject = stream;
-                    videoRef.current.play();
+                    console.log('videoRef.current after setting stream:', videoRef.current); 
+                    videoRef.current.play().then(()=> {
+                        console.log('Video playback started successfully');
+                    }).catch((error) => {
+                        console.error('Error trying to play the video:', error);
+                    });
                     scanQrCode();
+                    console.log("カメラへアクセスしています");
                 } else {
                     console.log("video object does not exist");
                 }
             })
             .catch((error) => {
-                console.log('Error accessing media devices:', error);
+                console.error('Error trying to play the video:', error);
                 setError('カメラへのアクセスに失敗しました。');
             });
                 
@@ -96,7 +104,10 @@ const SendCard = () => {
             if (currentVideoRef && currentVideoRef.srcObject) {
                 const stream = currentVideoRef.srcObject;
                 const tracks = stream.getTracks();//ビデオトラックを取得
-                tracks.forEach((track) => track.stop());
+                tracks.forEach((track) => {
+                    console.log(`Stopping track: ${track.kind}`);
+                    track.stop();
+                });
             }
         }
 
@@ -106,33 +117,43 @@ const SendCard = () => {
     const scanQrCode = () => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
-        if (canvas && video) {
-            const ctx = canvas.getContext("2d");//2D描画コンテキスト取得
-            if (ctx) {
-                //カメラの映像をcanvasに描画する
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                //QRコードをスキャン
-                const qrCodeData = jsQR(imageData.data, imageData.width, imageData.height);
-                if (qrCodeData) {
-                    //スキャンされた内容を確認する
-                    const walletAddress = qrCodeData.data;
-                    const isValidEthereumAddress = walletAddress.startsWith('0x') && walletAddress.length === 42;
+        if(!canvas || !video) {
+            console.log("Canvas or video object does not exist");
+            return;
+        }
+       
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });//2D描画コンテキスト取得
+        if (!ctx) {
+            console.error("Failed to get 2D context");
+            return;
+        } else {
+            //カメラの映像をcanvasに描画する
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            console.log(imageData.data);
+            console.log(imageData.width, imageData.height);
+            //QRコードをスキャン
+            const qrCodeData = jsQR(imageData.data, imageData.width, imageData.height);
+            console.log("QRcode Data:", qrCodeData)
+            if (qrCodeData) {
+                //スキャンされた内容を確認する
+                const data = qrCodeData.data.replace("ethereum:", "");
+                const walletAddress = data.split("@")[0];
+                console.log("ウォレットアドレス:", walletAddress);
+                const isValidEthereumAddress = walletAddress.startsWith('0x') && walletAddress.length === 42;
+                setRecipientAddress(walletAddress);
 
-                    if(!isValidEthereumAddress){
-                        setError('対応していないQRコードです');
-                        setTimeout(scanQrCode, 100);
-                        return;
-                    }
-
-                    setRecipientAddress(walletAddress);
+                if(!isValidEthereumAddress){
+                    setError('対応していないQRコードです');
                     return;
                 }
-
+                
+            } else {
+                setTimeout(scanQrCode, 1000);
             }
-        } else {
-            console.log("canvas object does not exist");
+
         }
+        
     }
      
     
@@ -297,7 +318,7 @@ const SendCard = () => {
                 {showQrReader && (
                     <video ref={videoRef} style={{width: '100%'}} autoPlay playsInline></video>
                 )}
-                <canvas ref={canvasRef} style={{display: 'none'}}></canvas>
+                <canvas ref={canvasRef} style={{display: 'block', width: '1280px', height: '720px'}}></canvas>
                 {/* 送信ボタン */}
                 <Button variant="contained" sx={{ mt: 2 }} onClick={sendNft}>
                     送信

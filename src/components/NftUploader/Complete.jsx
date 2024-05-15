@@ -12,7 +12,7 @@ const MintComplete = ({ mintComplete}) => {
         <div className="mintCompleteModal">
             <div className="mintComplete">
                 <h2>ミント完了しました！</h2>
-                <button onClick={() => navigate('/home')}>マイページへ</button>
+                <button onClick={() => navigate('/home/company')}>管理者ページへ</button>
             </div>
         </div>
     )
