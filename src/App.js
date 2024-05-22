@@ -18,9 +18,9 @@ function App() {
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/login/company" element={< NftMaker />}/>
+        <Route path="/mint" element={< NftMaker />}/>
         <Route path="/" element={<Login />}/>
-        <Route path="/login/admin" element={<Admin />}/>
+        <Route path="/home/admin" element={<Admin />}/>
         <Route path="/home/company" element={<HomeScreenForCompany/>}/>
         <Route path="/home/employee" element={<HomeScreenForEmployee/>}/>
         <Route path="/home/mint/employeeid" element={<EmployeeIdMint />}/>
