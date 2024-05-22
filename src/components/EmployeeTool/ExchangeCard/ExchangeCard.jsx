@@ -1,7 +1,7 @@
 import React from "react";
-import CustomToolbar from '../basic/Toolbar.jsx';
-import SendCard from '../ExchangeCard/SendCard.jsx';
-import DrawItem from '../basic/DrawItem.jsx';
+import CustomToolbar from '../../basic/Toolbar.jsx';
+import SendCard from '../../EmployeeTool/ExchangeCard/SendCard.jsx';
+import DrawItem from '../../basic/DrawItem.jsx';
 
 
 

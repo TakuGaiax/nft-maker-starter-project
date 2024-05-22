@@ -3,15 +3,18 @@ import { ethers } from 'ethers';
 import { useNavigate } from 'react-router-dom';
 import EmployeeId from "../../utils/EmployeeId.json";
 import BusinessCard from "../../utils/BusinessCard.json";
+import { employeeIdContractAddress, businessCardContractAddress } from "../index.js";
 
 import { TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import { HomePage } from '..';
-import SubTitle from '../basic/SubTitle';
+import { HomePage } from '../index.js';
+import SubTitle from '../basic/SubTitle.jsx';
 import Modal from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
+import AdminLoading from './AdminLoading.jsx';
+
 
 function Admin() {
   const navigate = useNavigate();
@@ -19,9 +22,8 @@ function Admin() {
   const [address, setAddress] = useState("");
   const [isAdminListModalOpen, setIsAdminListModalOpen] = useState(false);
   const [adminList, setAdminList] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
-  const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
   const ADMIN_ROLE = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('ADMIN_ROLE'));
   const drawerWidth = 240;
 
@@ -44,10 +46,29 @@ function Admin() {
           BusinessCard.abi,
           signer
         );
-        //管理者登録できる関数を追加
-        await employeeIdContract.addAdmin(address);
-        await businessCardContract.addAdmin(address);
-        alert("管理者の登録が完了しました！")
+        //記入漏れがあった場合エラー
+        if(!address) {
+          console.log("All fields are required");
+          window.alert("すべての項目を記入してください。");
+          return;
+        }
+        //ウォレットアドレスのフォーマット検証
+        if(!ethers.utils.isAddress(address)){
+            console.error("Invalid wallet address");
+            window.alert("無効なウォレットアドレスです。");
+            return;
+        }
+      //管理者登録できる関数を追加
+      setIsAdmin(true); 
+      try{
+          await employeeIdContract.addAdmin(address);
+          await businessCardContract.addAdmin(address);
+          setIsAdmin(false); 
+          alert("管理者の登録が完了しました！")
+        } catch (error) {
+          setIsAdmin(false); 
+          alert('管理者の登録に失敗しました')
+        }
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -74,12 +95,32 @@ function Admin() {
           BusinessCard.abi,
           signer
         );
+        //記入漏れがあった場合エラー
+        if(!address) {
+          console.log("All fields are required");
+          window.alert("すべての項目を記入してください。");
+          return;
+        }
+        //ウォレットアドレスのフォーマット検証
+        if(!ethers.utils.isAddress(address)){
+            console.error("Invalid wallet address");
+            window.alert("無効なウォレットアドレスです。");
+            return;
+        }
         //管理者登録できる関数を追加
-        await employeeIdContract.removeAdmin(address);
-        await employeeIdContract.removeAdminFromList(address);
-        await businessCardContract.removeAdmin(address);
-        await businessCardContract.removeAdminFromList(address);
-        alert("管理者の削除が完了しました！")
+        setIsAdmin(true); 
+        try{
+          await employeeIdContract.removeAdmin(address);
+          await employeeIdContract.removeAdminFromList(address);
+          await businessCardContract.removeAdmin(address);
+          await businessCardContract.removeAdminFromList(address);
+          setIsAdmin(false);
+          alert("管理者の削除が完了しました！")
+        } catch (error) {
+          setIsAdmin(false);
+          alert('管理者の削除に失敗しました')
+        }
+        
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -176,6 +217,7 @@ function Admin() {
           </Box>
         </Box>
       </Box>
+      <AdminLoading isAdmin={isAdmin}/>            
       {/* <Modal
         open={isAdminListModalOpen}
         onClose={() => setIsAdminListModalOpen(false)}

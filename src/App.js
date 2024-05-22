@@ -1,18 +1,18 @@
 import './App.css';
 import { BrowserRouter, Router, Route, Routes } from 'react-router-dom';
 
-import NftMaker from './components/NftUploader/NftMaker.jsx';
-import HomeScreenForCompany from './components/HomePage/HomeForCompany.jsx';
-import HomeScreenForEmployee from './components/HomePage/HomeForEmployee.jsx';
-import BusinessCardMint from './components/BusinessCard/BusinessCard.jsx';
-import ExchangeCard from './components/ExchangeCard/ExchangeCard.jsx';
-import UpdateEmployeeId from './components/UpdateNft/UpdateEmployeeId.jsx';
-import UpdateBusinessCard from './components/UpdateNft/UpdateBusinessCard.jsx';
-import UpdateHome from './components/UpdateNft/Update.jsx';
+import NftMaker from './components/Login/NftUploader/NftMaker.jsx';
+import HomeScreenForCompany from './components/AdminTool/HomeForCompany.jsx';
+import HomeScreenForEmployee from './components/EmployeeTool/HomeForEmployee.jsx';
+import BusinessCardMint from './components/AdminTool/Mint/BusinessCard.jsx';
+import ExchangeCard from './components/EmployeeTool/ExchangeCard/ExchangeCard.jsx';
+import UpdateEmployeeId from './components/AdminTool/UpdateNft/UpdateEmployeeId.jsx';
+import UpdateBusinessCard from './components/AdminTool/UpdateNft/UpdateBusinessCard.jsx';
+import UpdateHome from './components/AdminTool/UpdateNft/Update.jsx';
 import Login from './components/Login/Login.jsx';
-import Admin from './components/AdminCheck/Admin.jsx';
-import Mint from './components/Mint/Mint.jsx';
-import EmployeeIdMint from './components/Mint/MintEmployeeId.jsx';
+import Admin from './components/AdminTool/Admin.jsx';
+import Mint from './components/AdminTool/Mint/Mint.jsx';
+import EmployeeIdMint from './components/AdminTool/Mint/MintEmployeeId.jsx';
 
 function App() {
   return(

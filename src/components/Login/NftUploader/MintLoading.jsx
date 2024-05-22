@@ -1,7 +1,7 @@
 
 import React from 'react';
 import './MintLoading.css';
-import Loading from '../basic/loadingAnimation.jsx';
+import Loading from '../../basic/loadingAnimation';
 
 const MintLoading = ({isMinting}) => {
 

@@ -5,6 +5,7 @@ import BusinessCard from "../../utils/BusinessCard.json";
 import { useNavigate } from 'react-router-dom';
 import CheckLoading from './CheckLoading';
 import CheckComplete from './CheckComplete';
+import { employeeIdContractAddress, businessCardContractAddress } from "..";
 
 
 import Stack from '@mui/material/Stack';
@@ -16,8 +17,6 @@ const Login = () => {
     const [isChecking, setIsChecking] = useState(false);
     const [checkComplete, setCheckComplete] = useState(false);
 
-    const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
-    const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
     const navigate = useNavigate();
     
     //社員証NFTの保有確認し、ホーム画面へ

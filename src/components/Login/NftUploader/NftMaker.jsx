@@ -2,15 +2,16 @@
 
 // NftUploader.jsx
 import { ethers } from "ethers";
-import EmployeeId from "../../utils/EmployeeId.json";
-import BusinessCard from "../../utils/BusinessCard.json";
+import EmployeeId from "../../../utils/EmployeeId.json";
+import BusinessCard from "../../../utils/BusinessCard.json";
 import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "../NftUploader/NftUploader.css";
-import MintComplete from '../NftUploader/Complete.jsx';
-import MintEmployeeIdComplete from '../NftUploader/CompleteEmployeeId.jsx';
-import MintLoading from '../NftUploader/MintLoading.jsx';
+import "./NftUploader.css";
+import MintComplete from './Complete.jsx';
+import MintEmployeeIdComplete from './CompleteEmployeeId.jsx';
+import MintLoading from './MintLoading.jsx';
+import { employeeIdContractAddress, businessCardContractAddress } from "../../index.js";
 
 import Box from '@mui/material/Box'; 
 import TextField from '@mui/material/TextField';
@@ -18,7 +19,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 
-const EmployeeIdMint = () => {
+const NftMaker = () => {
   const navigate = useNavigate();
   //入力値の状態管理
   const [address, setAddress] = useState("");
@@ -81,8 +82,6 @@ const EmployeeIdMint = () => {
     }
   };
 
-  const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
-  const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
 
   //コントラクトからNFTミントの認証
   const MintEmployeeIdNft = async () => {
@@ -348,4 +347,4 @@ const EmployeeIdMint = () => {
   );
 };
 
-export default EmployeeIdMint;
+export default NftMaker;

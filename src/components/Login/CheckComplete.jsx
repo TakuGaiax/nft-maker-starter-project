@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import '../NftUploader/Complete.css';
+import '../Login/NftUploader/Complete.css';
 
 const CheckComplete = ({checkComplete}) => {
     const navigate = useNavigate();

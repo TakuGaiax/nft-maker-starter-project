@@ -2,15 +2,16 @@
 
 // NftUploader.jsx
 import { ethers } from "ethers";
-import EmployeeId from "../../utils/EmployeeId.json";
-import BusinessCard from "../../utils/BusinessCard.json";
+import EmployeeId from "../../../utils/EmployeeId.json";
+import BusinessCard from "../../../utils/BusinessCard.json";
 import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./NftUploader.css";
-import MintComplete from './Complete.jsx';
-import MintEmployeeIdComplete from './CompleteEmployeeId.jsx';
-import MintLoading from './MintLoading.jsx';
+import "../../Login/NftUploader/NftUploader.css";
+import MintComplete from '../../Login/NftUploader/Complete.jsx';
+import MintEmployeeIdComplete from '../../Login/NftUploader/CompleteEmployeeId.jsx';
+import MintLoading from '../../Login/NftUploader/MintLoading.jsx';
+import { employeeIdContractAddress, businessCardContractAddress } from "../../index.js";
 
 import Box from '@mui/material/Box'; 
 import TextField from '@mui/material/TextField';
@@ -18,7 +19,7 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 
 
-const NftMaker = () => {
+const EmployeeIdMint = () => {
   const navigate = useNavigate();
   //入力値の状態管理
   const [address, setAddress] = useState("");
@@ -81,8 +82,8 @@ const NftMaker = () => {
     }
   };
 
-  const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
-  const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
+  // const businessCardContractAddress ="0x7Fe4108D66665c731415eFc0b952795ba4a7f2F2";
+  // const employeeIdContractAddress ="00x8553c5530f63D385Fb89a2feAC96C1f0F770b82e";
 
   //コントラクトからNFTミントの認証
   const MintEmployeeIdNft = async () => {
@@ -273,7 +274,7 @@ const NftMaker = () => {
   return (
   <div className="nftUploaderContainer">
     <h1>
-      社員証&名刺NFT発行
+      社員証NFT発行
     </h1>
     <Box  sx={{ 
       width: 350,
@@ -348,4 +349,4 @@ const NftMaker = () => {
   );
 };
 
-export default NftMaker;
+export default EmployeeIdMint;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react";
-import {HomePage} from '../../components/index.js';
-import SubTitle from '../basic/SubTitle.jsx';
+import {HomePage} from '../../index.js';
+import SubTitle from '../../basic/SubTitle.jsx';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';

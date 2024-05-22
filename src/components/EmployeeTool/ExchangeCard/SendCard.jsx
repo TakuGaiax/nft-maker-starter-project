@@ -1,7 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ethers } from 'ethers';
-import BusinessCard from "../../utils/BusinessCard.json";
+import BusinessCard from "../../../utils/BusinessCard.json";
 import jsQR from 'jsqr';
+import { businessCardContractAddress } from "../../index";
+import MintComplete from '../../Login/NftUploader/Complete.jsx';
+import MintLoading from '../../Login/NftUploader/MintLoading.jsx';
+
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -26,13 +30,16 @@ const SendCard = () => {
     const [recipientAddress, setRecipientAddress] = useState('');
     const [currentAccount, setCurrentAccount] = useState("");
     const [showQrReader, setShowQrReader] = useState(false);
+    const [mintComplete, setMintComplete] = useState(false);
+    const [isMinting, setIsMinting] = useState(false);
+  
 
     const videoRef= useRef(null); 
     const canvasRef = useRef(null);
     const [error, setError] = useState('');
 
     const { ethereum } = window;
-    const CONTRACT_ADDRESS ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
+    // const CONTRACT_ADDRESS ="0x7Fe4108D66665c731415eFc0b952795ba4a7f2F2";
 
     //ウォレット認証
     const checkIfWalletIsConnected = async () => {
@@ -48,6 +55,7 @@ const SendCard = () => {
         if (accounts.length !== 0) {
           const account = accounts[0];
           console.log("Found an authorized account:", account);
+          console.log('コントラクトアドレス:',businessCardContractAddress);
           setCurrentAccount(account);
         } else {
           console.log("No authorized account found");
@@ -167,7 +175,7 @@ const SendCard = () => {
                 const address = accounts[0];
 
                 const connectedContract = new ethers.Contract(
-                    CONTRACT_ADDRESS,
+                    businessCardContractAddress,
                     BusinessCard.abi,
                     signer
                 );
@@ -199,7 +207,7 @@ const SendCard = () => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
-            CONTRACT_ADDRESS,
+            businessCardContractAddress,
             BusinessCard.abi,
             signer
         );
@@ -229,17 +237,25 @@ const SendCard = () => {
             const provider = new ethers.providers.Web3Provider(ethereum);
             const signer = provider.getSigner();
             const connectedContract = new ethers.Contract(
-                CONTRACT_ADDRESS,
+                businessCardContractAddress,
                 BusinessCard.abi,
                 signer
             );
 
             //ミント
             const toAddresses = [recipientAddress];
-            const transaction = await connectedContract.mintExistingBusinessCardNFT(selectedTokenId, toAddresses);
-            await transaction.wait();
+            setIsMinting(true);
+            try{
+                setIsMinting(true);
+                const transaction = await connectedContract.mintExistingBusinessCardNFT(selectedTokenId, toAddresses);
+                await transaction.wait();
 
-            alert("NFTが送信されました。");
+                alert("NFTが送信されました。");
+                setIsMinting(false);
+            } catch (error) {
+                alert("NFTが送信に失敗しました。");
+                setIsMinting(false);
+            }
 
         } catch (error) {
             alert("NFTが送信に失敗しました。");
@@ -324,6 +340,7 @@ const SendCard = () => {
                     送信
                 </Button>
             </Box>
+            <MintLoading isMinting={isMinting}/>
             
         </>
     )

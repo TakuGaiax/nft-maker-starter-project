@@ -1,15 +1,16 @@
 
 import { ethers } from "ethers";
-import BusinessCard from "../../utils/BusinessCard.json";
-import EmployeeId from "../../utils/EmployeeId.json";
+import BusinessCard from "../../../utils/BusinessCard.json";
+import EmployeeId from "../../../utils/EmployeeId.json";
+import { employeeIdContractAddress, businessCardContractAddress } from "../../index.js";
 
 import React from "react";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./BusinessCard.css";
-import MintComplete from '../NftUploader/Complete.jsx';
-import MintEmployeeIdComplete from '../NftUploader/CompleteEmployeeId.jsx';
-import MintLoading from '../NftUploader/MintLoading.jsx';
+import MintComplete from '../../Login/NftUploader/Complete.jsx';
+import MintEmployeeIdComplete from '../../Login/NftUploader/CompleteEmployeeId.jsx';
+import MintLoading from '../../Login/NftUploader/MintLoading.jsx';
 
 import Box from '@mui/material/Box'; 
 import TextField from '@mui/material/TextField';
@@ -34,8 +35,8 @@ const BusinessCardMint = () => {
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newMessage, setNewMessage] = useState(""); 
 
-  const businessCardContractAddress ="0xC3e32360C41eb667f2F8FB65F74eEdc317efEe93";
-  const employeeIdContractAddress ="0x8C396b9bD7aA43e15c9268291f8Ce62807799037";
+  // const businessCardContractAddress ="0x7Fe4108D66665c731415eFc0b952795ba4a7f2F2";
+  // const employeeIdContractAddress ="0x8553c5530f63D385Fb89a2feAC96C1f0F770b82e";
 
   const ownerAddress = "0x7829e36dd157a6a501f8ea5ebc242a12f6cdbfa7";
   /*
