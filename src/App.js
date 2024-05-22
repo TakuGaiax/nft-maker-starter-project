@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login/company" element={< NftMaker />}/>
-        <Route path="/login" element={<Login />}/>
+        <Route path="/" element={<Login />}/>
         <Route path="/login/admin" element={<Admin />}/>
         <Route path="/home/company" element={<HomeScreenForCompany/>}/>
         <Route path="/home/employee" element={<HomeScreenForEmployee/>}/>
