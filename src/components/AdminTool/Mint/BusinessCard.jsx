@@ -130,6 +130,7 @@ const BusinessCardMint = () => {
       window.alert("認証されてウォレットが見つかりません");
     }
   };
+
   const CheckNft = async () => {
     try {
       const { ethereum } = window;
@@ -167,7 +168,7 @@ const BusinessCardMint = () => {
 
           for (let i = 0; i < balance.toNumber(); i++) {
             try{
-              const tokenId = await employeeIdContract.tokenOfOwnerByIndex(currentAddress, i);
+              const tokenId = await employeeIdContract.tokenOfOwnerByIndex(address, i);
               console.log(`Token ID at index ${i}: ${tokenId}`);
               tokenIds.push(tokenId.toString());
             } catch (error) {
@@ -226,6 +227,9 @@ const BusinessCardMint = () => {
           onChange={(e) => setAddress(e.target.value)}
           autoFocus
           sx={{ width: '80%',  mx: 'auto', display: 'block'}}
+          InputProps={{
+            style: { paddingLeft: '10px'}
+          }}
         />
         <TextField
           margin="normal"
@@ -237,6 +241,9 @@ const BusinessCardMint = () => {
           onChange={(e) => setName(e.target.value)}
           autoFocus
           sx={{ width: '80%',  mx: 'auto', display: 'block'}}
+          InputProps={{
+            style: { paddingLeft: '10px'}
+          }}
         />
         <TextField
           margin="normal"
@@ -248,6 +255,9 @@ const BusinessCardMint = () => {
           onChange={(e) => setDepartment(e.target.value)}
           autoFocus
           sx={{ width: '80%', mx: 'auto', display: 'block'}}
+          InputProps={{
+            style: { paddingLeft: '10px'}
+          }}
         />
         <TextField
           margin="normal"
@@ -259,6 +269,9 @@ const BusinessCardMint = () => {
           onChange={(e) => setMessage(e.target.value)}
           autoFocus
           sx={{ width: '80%',  mx: 'auto', display: 'block'}}
+          InputProps={{
+            style: { paddingLeft: '10px'}
+          }}
         />
         <Button
           type="submit"

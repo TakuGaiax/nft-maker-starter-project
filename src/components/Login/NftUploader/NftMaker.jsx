@@ -188,7 +188,7 @@ const NftMaker = () => {
           //名刺NFT
           //社員証NFTのtokenIdを取得
           setIsMinting(true);
-          const balance = await employeeIdContract.balanceOf(currentAddress);
+          const balance = await employeeIdContract.balanceOf(address);
           console.log(`Total NFTs owned: ${balance.toNumber()}`);//NFT総数は読み取れている
 
           const tokenIds = [];//この配列にtokenIdが入る
@@ -196,7 +196,7 @@ const NftMaker = () => {
 
           for (let i = 0; i < balance.toNumber(); i++) {
             try{
-              const tokenId = await employeeIdContract.tokenOfOwnerByIndex(currentAddress, i);
+              const tokenId = await employeeIdContract.tokenOfOwnerByIndex(address, i);
               console.log(`Token ID at index ${i}: ${tokenId}`);
               tokenIds.push(tokenId.toString());
             } catch (error) {
@@ -291,6 +291,9 @@ const NftMaker = () => {
         onChange={(e) => setAddress(e.target.value)} 
         autoFocus
         sx={{ width: '80%', mx: 'auto', display: 'block'}}
+        InputProps={{
+          style: { paddingLeft: '10px'}
+        }}
       />
       <TextField
         margin="normal"
@@ -302,6 +305,9 @@ const NftMaker = () => {
         onChange={(e) => setName(e.target.value)}
         autoFocus
         sx={{ width: '80%',  mx: 'auto', display: 'block'}}
+        InputProps={{
+          style: { paddingLeft: '10px'}
+        }}
       />
       <TextField
         margin="normal"
@@ -313,6 +319,9 @@ const NftMaker = () => {
         onChange={(e) => setDepartment(e.target.value)}
         autoFocus
         sx={{ width: '80%', mx: 'auto', display: 'block'}}
+        InputProps={{
+          style: { paddingLeft: '10px'}
+        }}
       />
       <TextField
         margin="normal"
@@ -324,6 +333,9 @@ const NftMaker = () => {
         onChange={(e) => setMessage(e.target.value)}
         autoFocus
         sx={{ width: '80%',  mx: 'auto', display: 'block'}}
+        InputProps={{
+          style: { paddingLeft: '10px'}
+        }}
       />
       <Button
         type="submit"

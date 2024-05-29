@@ -43,6 +43,7 @@ const Login = () => {
                 if (employeeIdBalance.toNumber() > 0 ) {
                     setIsChecking(false);
                     setCheckComplete(true);
+                    navigate('/home/employee/nft')
                 } else {
                     window.alert('社員証NFTと名刺NFTのどちらも、またはどちらかを保有していません。');
                     setIsChecking(false);
@@ -91,7 +92,7 @@ const Login = () => {
             const isAdminBusinessCard = await businessCardContract.isAdmin(currentAddress);
             console.log(isAdminBusinessCard)
             if(isAdminEmployeeId && isAdminBusinessCard) {
-                navigate('/login/company')
+                navigate('/mint')
             } else {
                 window.alert('管理者権限が必要です')
             }

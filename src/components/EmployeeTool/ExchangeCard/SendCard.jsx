@@ -322,9 +322,9 @@ const SendCard = () => {
                     sx={{ 
                         mt: 2 , 
                         width: '30%',
-                        '.MuiInputBase-input': {
-                            textAlign: 'center',
-                        },
+                    }}
+                    InputProps={{
+                        style: { paddingLeft: '10px'}
                     }}
                 />
                 {/* QRコードでアドレス読み取り */}

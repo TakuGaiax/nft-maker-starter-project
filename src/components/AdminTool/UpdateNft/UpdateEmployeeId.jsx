@@ -15,6 +15,7 @@ import UpdateLoading from './UpdateLoading.jsx';
 const UpdateEmployeeId = ()  => {
 
     const [newAddress, setNewAddress] = useState("");
+    const [minters, setMinters] = useState([]);
     const [newName, setNewName] = useState('');
     const [newDepartment, setNewDepartment] = useState('');
     const [newMessage, setNewMessage] = useState('');
@@ -162,6 +163,8 @@ const UpdateEmployeeId = ()  => {
                     <ContainerForUpdate 
                         newAddress={newAddress}
                         setNewAddress={setNewAddress}
+                        // minters={minters}
+                        // setMinters={setMinters}
                         newName={newName}
                         setNewName={setNewName}
                         newDepartment={newDepartment}

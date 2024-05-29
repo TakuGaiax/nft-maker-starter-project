@@ -15,7 +15,7 @@ const Mint = () => {
             <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
                 <HomePage />
                 <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
-                    <SubTitle title="NFT情報更新ページ" />
+                    <SubTitle title="NFTミントページ" />
                     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
                         {/* <Typography variant="h4" gutterBottom>社員証NFT</Typography> */}
                         {/* <Link to ="/update/employeeid" >

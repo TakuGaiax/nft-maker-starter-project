@@ -34,7 +34,7 @@ const HomeScreenForEmployee = () => {
                 anchor="left"
                 >
                     <List>
-                        <ListItem button component={Link} to="/home">
+                        <ListItem button component={Link} to="/home/employee/nft">
                             <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
                         <ListItem button component={Link} to="/send">

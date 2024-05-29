@@ -20,7 +20,7 @@ function Admin() {
   const navigate = useNavigate();
 
   const [address, setAddress] = useState("");
-  const [isAdminListModalOpen, setIsAdminListModalOpen] = useState(false);
+  const [showAdminList, setShowAdminList] = useState(false);
   const [adminList, setAdminList] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -129,6 +129,21 @@ function Admin() {
     }
   }
 
+  const toggleAdminList = async() => {
+    if (!showAdminList) {
+      const list = await checkAdmin();
+      if(list && list.length > 0) {
+        setAdminList(list);
+        setShowAdminList(true);
+      } else {
+        console.log('取得した管理者リストが空または未定義です。');
+      }
+    } else {
+      setShowAdminList(false);
+    }
+  }
+  
+  //管理者一覧を表示
   const checkAdmin = async () => {
     try {
       const { ethereum } = window;
@@ -149,9 +164,12 @@ function Admin() {
         );
         const adminsOfEmployeeId = await employeeIdContract.getAdmins();
         const adminsOfBusinessCard = await employeeIdContract.getAdmins();
-        setAdminList(adminsOfEmployeeId);//社員証NFTの管理者のみしか表示していない
-        setIsAdminListModalOpen(true);
-        console.log('管理者：',adminsOfEmployeeId)
+        if (!adminsOfEmployeeId || adminsOfEmployeeId.length === 0) {
+          console.log('取得した管理者リストが空または未定義です。');
+          return [];
+        }
+        console.log('管理者リスト:', adminsOfEmployeeId);
+        return adminsOfEmployeeId;
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -168,6 +186,14 @@ function Admin() {
           flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%'
         }}>
           <SubTitle title="管理者設定ページ" sx={{ alignSelf: 'flex-start', width: '100%' }}/>
+          {showAdminList&& adminList && Array.isArray(adminList) && ( 
+            <Box sx={{ width: '50%', mt: 4, bgcolor: '#f0f0f0', p: 2, borderRadius: '10px' }}>
+              <Typography variant="h6">管理者一覧:</Typography>
+              {adminList.map((admin,index) => (
+                <Typography key={index} sx={{ mt: 1 }}>{admin}</Typography>
+              ))}
+            </Box>
+          )}
           <Box className = "adminContainer" sx={{
             width: 350,
             height: 250,
@@ -192,6 +218,9 @@ function Admin() {
               onChange={(e) => setAddress(e.target.value)} 
               autoFocus
               sx={{ width: '80%', mx: 'auto', display: 'block', marginBottom: '40px'}}
+              InputProps={{
+                style: { paddingLeft: '10px'}
+              }}
             />
               <Button
                   type="submit"
@@ -210,7 +239,7 @@ function Admin() {
                   削除する
               </Button>
             <Link href="#" variant="body2"
-              onClick={checkAdmin}
+              onClick={toggleAdminList}
               sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '20px', background: '#ffffff' }}>
               管理者一覧を表示する
             </Link>
@@ -218,31 +247,6 @@ function Admin() {
         </Box>
       </Box>
       <AdminLoading isAdmin={isAdmin}/>            
-      {/* <Modal
-        open={isAdminListModalOpen}
-        onClose={() => setIsAdminListModalOpen(false)}
-      >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
-          boxShadow: 24,
-          p: 4
-        }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            管理者一覧
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {adminList.map((admin, index) => (
-              <p key={index}>{admin}</p>
-            ))}
-           </Typography>
-        </Box>
-      </Modal> */}
     </div>
   )
 };

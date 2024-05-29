@@ -12,7 +12,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
-
 const HomeScreenForCompany = () => {
 
     const drawerWidth = 240;
@@ -34,7 +33,7 @@ const HomeScreenForCompany = () => {
                 anchor="left"
                 >
                     <List>
-                        <ListItem button component={Link} to="/home">
+                        <ListItem button component={Link} to="/home/company/nft">
                             <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
                         <ListItem button component={Link} to="/home/mint">
@@ -43,7 +42,7 @@ const HomeScreenForCompany = () => {
                         <ListItem button component={Link} to="/update">
                             <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
-                        <ListItem button component={Link} to="/login/admin">
+                        <ListItem button component={Link} to="/home/admin">
                             <ListItemText primary="管理者設定" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
                     </List>

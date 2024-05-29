@@ -13,6 +13,8 @@ import Login from './components/Login/Login.jsx';
 import Admin from './components/AdminTool/Admin.jsx';
 import Mint from './components/AdminTool/Mint/Mint.jsx';
 import EmployeeIdMint from './components/AdminTool/Mint/MintEmployeeId.jsx';
+import NftInformation from './components/EmployeeTool/NftInformation.jsx';
+import AdminNftInformation from './components/AdminTool/AdminNftInformation.jsx';
 
 function App() {
   return(
@@ -30,6 +32,8 @@ function App() {
         <Route path="/update" element={<UpdateHome/>}></Route>
         <Route path="/update/employeeid" element={<UpdateEmployeeId/>}></Route>
         <Route path="/update/businesscard" element={<UpdateBusinessCard/>}></Route>
+        <Route path="/home/employee/nft" element={<NftInformation />}></Route>
+        <Route path="/home/company/nft" element={<AdminNftInformation />}></Route>
       </Routes>
     </BrowserRouter>
   )
