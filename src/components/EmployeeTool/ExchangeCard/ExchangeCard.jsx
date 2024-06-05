@@ -21,11 +21,11 @@ const ExchangeCard = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
                 <CustomToolbar />
                 <Box sx={{display: 'flex', flexGrow: 1}}>
                     <DrawItem />
-                    <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
+                    <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`, marginTop: 10}}>
                         <SendCard />
                     </Box>
                 </Box>

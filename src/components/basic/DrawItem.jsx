@@ -4,6 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { Link } from 'react-router-dom';
+import { Box, Typography } from "@mui/material";
 
 const DrawItem = () => {
 
@@ -17,13 +18,15 @@ const DrawItem = () => {
             '& .MuiDrawer-paper': {
                 width: drawerWidth,
                 boxSizing: 'border-box',
-                marginTop: '64px',
             },
         }}
         variant="permanent"
         anchor="left"
         >
-            <List>
+            <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
+                社員用
+            </Typography>
+            <List sx={{backgroundColor: 'transparent'}}>
                 <ListItem button component={Link} to="/home/employee/nft">
                     <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                 </ListItem>

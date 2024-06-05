@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Drawer, List, ListItem, ListItemText, Stack, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import CustomToolbar from '../basic/Toolbar'
 import DrawItem from '../basic/DrawItem'
@@ -6,6 +6,8 @@ import { ethers } from 'ethers';
 import EmployeeId from "../../utils/EmployeeId.json";
 import BusinessCard from "../../utils/BusinessCard.json";
 import { employeeIdContractAddress, businessCardContractAddress, HomePage } from "../index.js";
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -154,12 +156,41 @@ function AdminNftInformation() {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
+            <CustomToolbar />
         <Stack sx={{display: 'flex', flexGrow: 1}}>
-                <HomePage />
+                <Drawer sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+                >
+                    <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
+                        管理者用
+                    </Typography>
+                    <List>
+                        <ListItem button component={Link} to="/home/company/nft">
+                            <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/home/mint">
+                            <ListItemText primary="NFTミント" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/update">
+                            <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/home/admin">
+                            <ListItemText primary="管理者設定" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                    </List>
+                </Drawer>
                 <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, mb:10 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, mb:5, mt:5 }}>
                         <Typography component="h1" variant="h6" color="inherit" noWrap>
-                            社員NFT 閲覧ページ
+                            MyNFT 閲覧ページ
                         </Typography>
                     </Box>
                     {/* 選択されたtokenIdに基づいて名刺NFTの情報を表示 */}

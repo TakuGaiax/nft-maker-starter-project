@@ -259,7 +259,7 @@ const NftMaker = () => {
             const isAdminBusinessCard = await businessCardContract.isAdmin(currentAddress);
             console.log(isAdminBusinessCard)
             if(isAdminEmployeeId && isAdminBusinessCard) {
-                navigate('/home/company')
+                navigate('/home/company/nft')
             } else {
                 window.alert('管理者権限が必要です')
             }

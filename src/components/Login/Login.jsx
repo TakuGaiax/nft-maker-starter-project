@@ -122,7 +122,7 @@ const Login = () => {
                         fontWeight: '700',
                     }}
                 >
-                    Log in
+                    Login
                 </Typography>
                 <Stack direction="column" spacing={2}>
                     <Button 

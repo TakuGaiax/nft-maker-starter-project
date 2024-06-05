@@ -5,15 +5,16 @@ import EmployeeId from "../../utils/EmployeeId.json";
 import BusinessCard from "../../utils/BusinessCard.json";
 import { employeeIdContractAddress, businessCardContractAddress } from "../index.js";
 
-import { TextField } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, Stack, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import { HomePage } from '../index.js';
 import SubTitle from '../basic/SubTitle.jsx';
 import Modal from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import AdminLoading from './AdminLoading.jsx';
+import CustomToolbar from '../basic/Toolbar.jsx';
 
 
 function Admin() {
@@ -181,13 +182,47 @@ function Admin() {
   return (
     <div>
       <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
-        <HomePage />
+        <CustomToolbar />
+      <Stack sx={{display: 'flex', flexGrow: 1}}>
+        <Drawer sx={{
+            width: drawerWidth,
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+            },
+        }}
+        variant="permanent"
+        anchor="left"
+        >
+            <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
+                管理者用
+            </Typography>
+            <List>
+                <ListItem button component={Link} to="/home/company/nft">
+                    <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
+                </ListItem>
+                <ListItem button component={Link} to="/home/mint">
+                    <ListItemText primary="NFTミント" sx={{backgroundColor: 'transparent'}}/>
+                </ListItem>
+                <ListItem button component={Link} to="/update">
+                    <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
+                </ListItem>
+                <ListItem button component={Link} to="/home/admin">
+                    <ListItemText primary="管理者設定" sx={{backgroundColor: 'transparent'}}/>
+                </ListItem>
+            </List>
+        </Drawer>
         <Box  className= "main" sx={{
           flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%'
         }}>
-          <SubTitle title="管理者設定ページ" sx={{ alignSelf: 'flex-start', width: '100%' }}/>
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, mt: 5 }}>
+              <Typography component="h1" variant="h6" color="inherit" noWrap>
+                  管理者設定ページ
+              </Typography>
+          </Box>
           {showAdminList&& adminList && Array.isArray(adminList) && ( 
-            <Box sx={{ width: '50%', mt: 4, bgcolor: '#f0f0f0', p: 2, borderRadius: '10px' }}>
+            <Box sx={{ width: '50%', mt: 4, bgcolor: '#f0f0f0', p: 2, borderRadius: '10px'}}>
               <Typography variant="h6">管理者一覧:</Typography>
               {adminList.map((admin,index) => (
                 <Typography key={index} sx={{ mt: 1 }}>{admin}</Typography>
@@ -240,11 +275,12 @@ function Admin() {
               </Button>
             <Link href="#" variant="body2"
               onClick={toggleAdminList}
-              sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '20px', background: '#ffffff' }}>
+              sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '50px', background: '#ffffff' }}>
               管理者一覧を表示する
             </Link>
           </Box>
         </Box>
+      </Stack>
       </Box>
       <AdminLoading isAdmin={isAdmin}/>            
     </div>

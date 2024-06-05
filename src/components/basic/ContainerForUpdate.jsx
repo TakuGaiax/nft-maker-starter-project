@@ -44,7 +44,7 @@ const ContainerForUpdate = ({ newAddress, setNewAddress, newName, setNewName, ne
         <>
             <Container maxWidth="sm" sx={{ mt: 8}}>
                 <Paper elevation={3} sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 2, borderRadius: '16px'}}>
-                    <select
+                    {/* <select
                     value = {tokenId}
                     onChange = {(e) => setTokenId(e.target.value)}
                     style ={{width: '80%', height: '40px', marginBottom: '20px', display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
@@ -55,7 +55,7 @@ const ContainerForUpdate = ({ newAddress, setNewAddress, newName, setNewName, ne
                             TokenId: {id.toString()}
                         </option>
                     ))}
-                    </select>
+                    </select> */}
                     <select
                     value = {newAddress}
                     onChange = {(e) => setNewAddress(e.target.value)}

@@ -6,10 +6,13 @@ import ButtonForUpdate from '../../basic/ButtonForUpdate.jsx';
 import BusinessCard from "../../../utils/BusinessCard.json";
 import { ethers } from 'ethers';
 import Box from '@mui/material/Box';
-import { Button } from "@mui/material";
+import { Button, Drawer, List, ListItem, ListItemText, Stack, Typography } from "@mui/material";
 import { businessCardContractAddress } from "../../index.js";
 import UpdateComplete from './UpdateComplete.jsx';
 import UpdateLoading from './UpdateLoading.jsx';
+import CustomToolbar from "../../basic/Toolbar.jsx";
+import { Link } from 'react-router-dom';
+
 
 
 const UpdateBusinessCard = () => {
@@ -30,8 +33,8 @@ const UpdateBusinessCard = () => {
     // const CONTRACT_ADDRESS = "0x7Fe4108D66665c731415eFc0b952795ba4a7f2F2";
 
     useEffect(() => {
-            getTokenIds();
-    }, []);
+            getTokenIds(newAddress);
+    }, [newAddress]);
     
     //ウォレットを認証する
     const checkIfWalletIsConnected = async () => {
@@ -75,7 +78,8 @@ const UpdateBusinessCard = () => {
                         alert("名刺NFTを所有していません")
                         return;
                     }
-                    setOwnedTokenIds(tokenIds.map(tokenId => tokenId.toNumber()));
+                    const selectedTokenId = tokenIds.toString();
+                    setTokenId(selectedTokenId);
                     console.log("BusinessCard Nfts:", tokenIds.toString());
                 } else {
                     console.error("Invalid address:", newAddress);
@@ -149,7 +153,37 @@ const UpdateBusinessCard = () => {
     return (
         <div>
             <Box sx={{ display: 'flex', flexDirection: 'columu', height: '100vh' }}>
-                <HomePage />
+                <CustomToolbar />
+            <Stack sx={{display: 'flex', flexGrow: 1}}>
+                <Drawer sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                    variant="permanent"
+                    anchor="left"
+                    >
+                    <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
+                        管理者用
+                    </Typography>
+                    <List>
+                        <ListItem button component={Link} to="/home/company/nft">
+                            <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/home/mint">
+                            <ListItemText primary="NFTミント" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/update">
+                            <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                        <ListItem button component={Link} to="/home/admin">
+                            <ListItemText primary="管理者設定" sx={{backgroundColor: 'transparent'}}/>
+                        </ListItem>
+                    </List>
+                </Drawer>
                 <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
                     <SubTitle title="名刺NFT情報更新ページ"/>
                     <ContainerForUpdate
@@ -166,16 +200,17 @@ const UpdateBusinessCard = () => {
                         tokenId={tokenId}
                         setTokenId={setTokenId}
                     />
-                    <Button
+                    {/* <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         onClick={getTokenIds}
                         sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
                             NFT情報を取得
-                    </Button>
+                    </Button> */}
                     <ButtonForUpdate onUpdate={updateBusinessCardInfo} />
                 </Box>
+            </Stack>
             </Box>
             <UpdateComplete updateComplete={updateComplete}/>
             <UpdateLoading isUpdating={isUpdating}/>            

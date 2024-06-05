@@ -153,7 +153,7 @@ function NftInformation() {
                 {/* <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
                     <SendCard />
                 </Box> */}
-                <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`}}>
+                <Box component="main" sx={{ flexGrow: 1, p: 3, marginLeft: `${drawerWidth}px`, marginTop: 10}}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', p: 5, mb:10 }}>
                         <Typography component="h1" variant="h6" color="inherit" noWrap>
                             MyNFT 閲覧ページ

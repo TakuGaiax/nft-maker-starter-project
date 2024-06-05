@@ -184,8 +184,15 @@ const SendCard = () => {
                 try {
                     //スマコンの関数を呼び出してtokenIdを取得
                     const tokenIds = await connectedContract.getTokenIds(address);
-                    setTokenIds(tokenIds);
-                    return tokenIds;
+                    if(tokenIds.length > 0) {
+                        const selectedTokenId = tokenIds[0];
+                        setSelectedTokenId(selectedTokenId);
+                        fetchNftInfo(selectedTokenId);
+                    } else {
+                        window.alert("NFTが見つかりません")
+                    }
+                    // setTokenIds(tokenIds);
+                    // return tokenIds;
 
                 } catch (error) {
                     console.error("NFTの取得に失敗");
@@ -280,7 +287,7 @@ const SendCard = () => {
             </Box>
             {/* tokenIdを選択する */}
             <Box sx ={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2}}>
-                <FormControl sx={{ width: '30%'}}>
+                {/* <FormControl sx={{ width: '30%'}}>
                     <InputLabel id="tokenId-select">TokenID</InputLabel>
                     <Select
                         labelId="tokenId-select"
@@ -302,7 +309,7 @@ const SendCard = () => {
                         }}
                     >
                         {/* 送信可能なtokenIdのリストを表示 */}
-                        {tokenIds.map((tokenId) => (
+                        {/* {tokenIds.map((tokenId) => (
                             <MenuItem key={tokenId} value={tokenId}>
                                 <Typography noWrap>
                                     {tokenId.toString()}
@@ -310,7 +317,7 @@ const SendCard = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */} 
 
                 {/* 送信先アドレスを入力する */}
                 <TextField

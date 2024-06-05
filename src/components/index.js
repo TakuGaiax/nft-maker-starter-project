@@ -2,5 +2,5 @@
 export { default as HomePage } from './AdminTool/HomeForCompany';
 
 
-export const employeeIdContractAddress = '0x6919e1620b038Ad259F2508cA9b4f1aDe79e7792';
-export const businessCardContractAddress = '0x1A0Ae08fcdCa899d51cD1dBf518C42a61D80EDd2';
+export const employeeIdContractAddress = '0x3533D085b699c55c01c0DA390ab6332E3D19D560';
+export const businessCardContractAddress = '0xd593aa183cD005298b739C918C801e267B6BE184';
