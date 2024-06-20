@@ -20,6 +20,8 @@ function NftInformation() {
     const [selectedEmployeeIdInfo, setSelectedEmployeeIdInfo] = useState({employeeName: '', department: '', message: '' });
     const [businessCardTokenIds, setBusinessCardTokenIds] = useState([]);
     const [selectedBusinessCardInfo, setSelectedBusinessCardInfo] = useState({employeeName: '', department: '', message: '' });
+    const [employeeIdLink, setEmployeeIdLink] = useState();
+    const [businessCardLink, setBusinessCardLink] = useState();
 
     useEffect(() => {
         
@@ -75,6 +77,11 @@ function NftInformation() {
                         department: departmentName,
                         message: message
                     });
+                    //OpenSeaリンクの表示
+                    const employeeIdLink = `https://testnets.opensea.io/assets/sepolia/${employeeIdContractAddress}/${tokenIds.toString()}`
+                    setEmployeeIdLink(employeeIdLink);
+                    const businessCardLink = `https://testnets.opensea.io/assets/sepolia/${businessCardContractAddress}/${tokenIds.toString()}`
+                    setBusinessCardLink(businessCardLink);
                 } catch (error) {
                     console.error("NFT情報が取得できません");
                 }
@@ -164,6 +171,14 @@ function NftInformation() {
                         <Typography variant="body1">社員名: {selectedBusinessCardInfo.name}</Typography>
                         <Typography variant="body1">部署名: {selectedBusinessCardInfo.department}</Typography>
                         <Typography variant="body1">メッセージ: {selectedBusinessCardInfo.message}</Typography>
+                    </Box>
+                    <Box sx={{mt: 2, display: 'flex', flexDirection: 'row', alignItems: 'center',justifyContent: 'center', gap: 2, mb:4}}>
+                        {employeeIdLink && (
+                            <Button href={employeeIdLink}>社員証をOpenSeaで見る</Button>
+                        )}
+                        {employeeIdLink && (
+                            <Button href={businessCardLink}>名刺をOpenSeaで見る</Button>
+                        )}
                     </Box>
                     {/* <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <Stack direction="row" spacing={2}>

@@ -23,6 +23,10 @@ function AdminNftInformation() {
     const [selectedBusinessCardInfo, setSelectedBusinessCardInfo] = useState({employeeName: '', department: '', message: '' });
     const [recipientAddress, setRecipientAddress] = useState('');
     const [minters, setMinters] = useState([]);
+    const [nfts, setnfts] = useState([]);
+    const [employeeIdLink, setEmployeeIdLink] = useState();
+    const [businessCardLink, setBusinessCardLink] = useState();
+
 
     useEffect(() => {
     //ウォレット認証
@@ -84,6 +88,12 @@ function AdminNftInformation() {
                         department: departmentName,
                         message: message
                     });
+
+                    //OpenSeaリンクの表示
+                    const employeeIdLink = `https://testnets.opensea.io/assets/sepolia/${employeeIdContractAddress}/${tokenIds.toString()}`
+                    setEmployeeIdLink(employeeIdLink);
+                    const businessCardLink = `https://testnets.opensea.io/assets/sepolia/${businessCardContractAddress}/${tokenIds.toString()}`
+                    setBusinessCardLink(businessCardLink);
                 } catch (error) {
                     console.error("NFT情報が取得できません");
                 }
@@ -95,62 +105,37 @@ function AdminNftInformation() {
             console.log(error);
         }
     }
-    
-    //社員証NFTの情報を閲覧
-    // const showEmployeeIdNft = async () => {
-    //     try {
-    //         if (ethereum) {
-    //             const provider = new ethers.providers.Web3Provider(ethereum);
-    //             const signer = provider.getSigner();
-    //             const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    //             const address = accounts[0];
 
-    //             const employeeIdContract = new ethers.Contract(
-    //                 employeeIdContractAddress,
-    //                 EmployeeId.abi,
-    //                 signer
-    //             );
+    useEffect(() => {
+        const fetchNfts = async () => {
+            if (window.ethereum) {
+                const provider = new ethers.providers.Web3Provider(ethereum);
+                const signer = provider.getSigner();
 
-    //             //社員証NFTのIdを取得
-    //             const balance = await employeeIdContract.balanceOf(currentAccount);
-    //             console.log(`Total NFTs owned: ${balance.toNumber()}`);//NFT総数は読み取れている      
-    //             const tokenIds = [];//この配列にtokenIdが入る
-    //             console.log("tokenIds:", tokenIds);
+                const businessCardContract = new ethers.Contract(
+                    businessCardContractAddress,
+                    BusinessCard.abi,
+                    signer
+                );
 
-    //             for (let i = 0; i < balance.toNumber(); i++) {
-    //             try{
-    //                 const tokenId = await employeeIdContract.tokenOfOwnerByIndex(currentAccount, i);
-    //                 console.log(`Token ID at index ${i}: ${tokenId}`);
-    //                 tokenIds.push(tokenId.toString());
-    //             } catch (error) {
-    //                 console.error(`Error fetching token at index ${i}:`, error);
-    //             }
-    //             } 
-        
-    //             //最新のtokenIdを取得
-    //             const latestTokenId = tokenIds[tokenIds.length - 1];
-    //             console.log("Going to pop wallet now to pay gas...");
+                const tokenIds = await businessCardContract.getTokenIds(recipientAddress);
+                const svgData = await Promise.all(tokenIds.map(async (tokenId) => {
+                    const tokenURI = await businessCardContract.uri(tokenId);
+                    const res = await fetch(tokenURI);
+                    const metadata = await res.json();
+                    const decodedSvg = atob(metadata.image.split(',')[1]);
+                    console.log(decodedSvg)
+                    return { id: tokenId.toString(), image: decodedSvg};
+                }))
+                // console.log(svgData);
+                setnfts(svgData);
+            }
+        };
 
-    //             setEmployeeIdTokenIds(latestTokenId);
-
-    //             if(latestTokenId) {
-    //                 const nftInfo = await employeeIdContract.getEmployeeIdInfo(latestTokenId);//コントラクトを変更する必要あり
-    //                 const [employeeName, departmentName, message] = nftInfo
-    //                 setSelectedEmployeeIdInfo({
-    //                     name: employeeName,
-    //                     department: departmentName,
-    //                     message: message
-    //                 });
-    //             } 
-    //         } else {
-    //             console.log("Ethereum object doesn't exist!");
-    //         }
-    //     } catch (error) {
-    //         console.error('Error');
-    //     }
-
-    // }
-
+        if (recipientAddress) {
+            fetchNfts();
+        }
+    }, [recipientAddress]);
     
 
 
@@ -172,12 +157,12 @@ function AdminNftInformation() {
                     <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                         管理者用
                     </Typography>
-                    <List>
+                    <List sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                         <ListItem button component={Link} to="/home/company/nft">
                             <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
                         <ListItem button component={Link} to="/home/mint">
-                            <ListItemText primary="NFTミント" sx={{backgroundColor: 'transparent'}}/>
+                            <ListItemText primary="社員追加" sx={{backgroundColor: 'transparent'}}/>
                         </ListItem>
                         <ListItem button component={Link} to="/update">
                             <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>
@@ -193,28 +178,31 @@ function AdminNftInformation() {
                             MyNFT 閲覧ページ
                         </Typography>
                     </Box>
+                    {/* <Box>
+                        {nfts.map((nft) => {
+                            <Box key={nft.id} sx={{margin: 2 }}>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: nft.image }}
+                                    style={{ maxWidth: '100%' }}
+                                />
+                            </Box>
+                        })}
+                    </Box> */}
                     {/* 選択されたtokenIdに基づいて名刺NFTの情報を表示 */}
                     <Box sx={{mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mb:4}}>
                         <Typography variant="body1">社員名: {selectedBusinessCardInfo.name}</Typography>
                         <Typography variant="body1">部署名: {selectedBusinessCardInfo.department}</Typography>
                         <Typography variant="body1">メッセージ: {selectedBusinessCardInfo.message}</Typography>
+                        <Box>
+                            {employeeIdLink && (
+                                <Button href={employeeIdLink}>社員証をOpenSeaで見る</Button>
+                            )}
+                            {businessCardLink && (
+                                <Button href={businessCardLink}>名刺をOpenSeaで見る</Button>
+                            )}
+                        </Box>
                     </Box>
                     <Box sx ={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2}}>
-                        {/* ウォレットアドレスの入力 */}
-                        {/* <TextField
-                            fullWidth
-                            label="送信先アドレス"
-                            variant="outlined"
-                            value={recipientAddress}
-                            onChange={(e) => setRecipientAddress(e.target.value)}
-                            sx={{ 
-                                mt: 2 , 
-                                width: '30%',
-                                '.MuiInputBase-input': {
-                                    textAlign: 'center',
-                                },
-                            }}
-                        /> */}
                         <select
                             value = {recipientAddress}
                             onChange = {(e) => setRecipientAddress(e.target.value)}
@@ -227,6 +215,7 @@ function AdminNftInformation() {
                                 </option>
                             ))}
                         </select>
+
                     </Box>
                 </Box>
             </Stack>

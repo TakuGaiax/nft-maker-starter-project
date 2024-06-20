@@ -198,12 +198,12 @@ function Admin() {
             <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                 管理者用
             </Typography>
-            <List>
+            <List sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                 <ListItem button component={Link} to="/home/company/nft">
                     <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                 </ListItem>
                 <ListItem button component={Link} to="/home/mint">
-                    <ListItemText primary="NFTミント" sx={{backgroundColor: 'transparent'}}/>
+                    <ListItemText primary="社員追加" sx={{backgroundColor: 'transparent'}}/>
                 </ListItem>
                 <ListItem button component={Link} to="/update">
                     <ListItemText primary="社員情報更新" sx={{backgroundColor: 'transparent'}}/>

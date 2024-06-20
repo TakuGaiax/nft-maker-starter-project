@@ -334,6 +334,10 @@ const SendCard = () => {
                         style: { paddingLeft: '10px'}
                     }}
                 />
+                {/* 送信ボタン */}
+                <Button variant="contained" sx={{ mt: 2 }} onClick={sendNft}>
+                    送信
+                </Button>
                 {/* QRコードでアドレス読み取り */}
                 <Button onClick={() => setShowQrReader(!showQrReader)}>
                     {showQrReader ? 'QRリーダーを隠す':'QRコードでアドレスをスキャン'}
@@ -342,10 +346,6 @@ const SendCard = () => {
                     <video ref={videoRef} style={{width: '100%'}} autoPlay playsInline></video>
                 )}
                 <canvas ref={canvasRef} style={{display: 'block', width: '1280px', height: '720px'}}></canvas>
-                {/* 送信ボタン */}
-                <Button variant="contained" sx={{ mt: 2 }} onClick={sendNft}>
-                    送信
-                </Button>
             </Box>
             <MintLoading isMinting={isMinting}/>
             

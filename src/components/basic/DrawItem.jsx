@@ -26,7 +26,7 @@ const DrawItem = () => {
             <Typography variant='h5' sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                 社員用
             </Typography>
-            <List sx={{backgroundColor: 'transparent'}}>
+            <List sx={{ width: '100%', height: 40, textAlign: 'center', marginTop:'15px', fontWeight: 'bold', backgroundColor: 'transparent'}}>
                 <ListItem button component={Link} to="/home/employee/nft">
                     <ListItemText primary="NFT情報" sx={{backgroundColor: 'transparent'}}/>
                 </ListItem>
