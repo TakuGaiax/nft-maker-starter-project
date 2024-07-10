@@ -92,7 +92,7 @@ const Login = () => {
             const isAdminBusinessCard = await businessCardContract.isAdmin(currentAddress);
             console.log(isAdminBusinessCard)
             if(isAdminEmployeeId && isAdminBusinessCard) {
-                navigate('/mint')
+                navigate('/home/company/nft')
             } else {
                 window.alert('管理者権限が必要です')
             }

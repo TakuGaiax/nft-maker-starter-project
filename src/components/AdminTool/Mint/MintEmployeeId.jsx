@@ -347,11 +347,11 @@ const EmployeeIdMint = () => {
         sx={{ width: '50%',  mx: 'auto', display: 'block', textTransform: 'none', marginTop: '20px' }}>
           発行する
       </Button>
-      <Link href="#" variant="body2"
+      {/* <Link href="#" variant="body2"
         onClick={checkAdmin}
         sx={{ display: 'block', textAlign: 'center', width: '100%', marginTop: '20px', background: '#ffffff' }}>
         管理者専用画面へ
-      </Link>
+      </Link> */}
     </Box>
     <MintLoading isMinting={isMinting}/>
     <MintComplete mintComplete={mintComplete}/>

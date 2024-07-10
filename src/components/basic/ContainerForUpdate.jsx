@@ -42,7 +42,8 @@ const ContainerForUpdate = ({ newAddress, setNewAddress, newName, setNewName, ne
     
     return(
         <>
-            <Container maxWidth="sm" sx={{ mt: 8}}>
+            <Container maxWidth="sm" >
+                
                 <Paper elevation={3} sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 2, borderRadius: '16px'}}>
                     {/* <select
                     value = {tokenId}
